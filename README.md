@@ -190,6 +190,46 @@ flow("visit /login|invalid login|valid login", function(fl) {
 
 In this case, the /login page is loaded only once and the invalid as well as the valid login cases are tested. The number of test cases is reduced from 5 to 1 and the repeating execution of loading the /login page is avoided. Since less tests are run and less unnecessary context setup is executed, the test suite can have dramatic performance gains. On one of my projects, I have seen nearly a 10x gain of performance (~ 400 seconds to 40 seconds), without having to resort to parallelization.
 
+# Useful Methods
+
+## info
+
+info will log to console.info. This is useful when you need to log a particular step.
+
+```javascript
+flow("visit /|type 'hello world'", function(fl) {
+  fl.step("visit /", function() {
+      window.location.href = "http://yoursite.com/";
+    })
+    .info("I will be written to console.info")
+    .step("fill out login form with invalid login credentials and submit", function() {
+      $("#login .name").val("user@example.com");
+      $("#login .password").val("wrong-password");
+      $("#login button").click();
+      $("#login").submit();
+    })
+  ;
+```
+
+## stop
+
+Stop the test immediately. This is useful in cutting out log message noise, when the test is very long and fails in an intermediate section.
+
+```javascript
+flow("visit /|type 'hello world'", function(fl) {
+  fl.step("visit /", function() {
+      window.location.href = "http://yoursite.com/";
+    })
+    .stop()
+    .step("I will not be executed", function() {
+      $("#login .name").val("user@example.com");
+      $("#login .password").val("wrong-password");
+      $("#login button").click();
+      $("#login").submit();
+    })
+  ;
+```
+
 # Blog Posts
 
 [Fast and Thorough Testing with Jasmine Flow](http://briantakita.com/articles/fast-and-thorough-testing-with-jasmine-flow/)

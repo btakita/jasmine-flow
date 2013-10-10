@@ -20,6 +20,7 @@
         xaver: noop,
         macro: macro,
         xmacro: noop,
+        stop: stop,
         log: function(name) {
           steps.push(function() {console.log(name)});
           return instance;
@@ -36,14 +37,18 @@
         function callStep(steps, i, length) {
           if (i < length) {
             var step = steps[i];
-            if (step && step.length > 0) {
-              step(function() {
-                callStep(steps, i+1, length);
-              });
-            } else {
-              if (step) {
+            if (step) {
+              if (step.done) {
+                if (done) done();
+              } else if (step.length > 0) {
+                step(function() {
+                  callStep(steps, i+1, length);
+                });
+              } else {
                 step();
+                callStep(steps, i+1, length);
               }
+            } else {
               callStep(steps, i+1, length);
             }
           } else {
@@ -76,6 +81,10 @@
     }
     function macro(fn) {
       fn.apply(instance, [instance]);
+      return instance;
+    }
+    function stop() {
+      steps.push({done: true});
       return instance;
     }
     main();
