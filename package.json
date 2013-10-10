@@ -4,7 +4,7 @@
   "url": "https://github.com/btakita/jasmine-flow",
   "author": "Brian Takita <brian.takita@gmail.com>",
   "main": "jasmine-flow.js",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
